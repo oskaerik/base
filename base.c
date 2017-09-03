@@ -92,14 +92,14 @@ int dec_input(int *array, int size) {
 }
 
 /* Prints a number in the decimal number system */
-void print_dec(int number) {
-    printf("Dec: %d\n", number);
+void print_dec(unsigned int number) {
+    printf("Dec: %u\n", number);
 }
 
 /* Prints a number in the binary number system */
-void print_bin(int number) {
+void print_bin(unsigned int number) {
     printf("Bin: ");
-    int factor = 1073741824;
+    unsigned int factor = 2147483648;
     int started = 0;
     while (1) {
         if (number >= factor) {
@@ -117,13 +117,17 @@ void print_bin(int number) {
             break;
         }
     }
+    if (!started) {
+        // Print a zero if nothing has been printed
+        printf("0");
+    }
     printf("\n");
 }
 
 /* Prints a number in the hexadecimal number system */
-void print_hex(int number) {
+void print_hex(unsigned int number) {
     printf("Hex: 0x");
-    int factor = 268435456;
+    unsigned int factor = 268435456;
     int started = 0;
     int counter = 0;
     while (1) {
@@ -146,6 +150,10 @@ void print_hex(int number) {
             break;
         }
     }
+    if (!started) {
+        // Print a zero if nothing has been printed
+        printf("0");
+    }
     printf("\n");
 }
 
@@ -157,7 +165,7 @@ int main() {
     get_input(input, size);
 
     // Check base and get decimal value
-    int decimal = 0;
+    unsigned int decimal = 0;
     if (input[0] == 'b' || input[0] == 'B') {
         // Binary starts with b/B
         decimal = bin_input(input, size);
@@ -169,6 +177,7 @@ int main() {
         decimal = dec_input(input, size);
     }
 
+    // Print output
     print_dec(decimal);
     print_bin(decimal);
     print_hex(decimal);
