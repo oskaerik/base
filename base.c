@@ -37,7 +37,7 @@ void get_input(int *array, int size) {
     }
 }
 
-/* Returns decimal value of binary number */
+/* Returns decimal value of binary number from raw input */
 int bin_input(int *array, int size) {
     int result = 0;
     for (int i = 0; i < size; i++) {
@@ -53,7 +53,7 @@ int bin_input(int *array, int size) {
     return result;
 }
 
-/* Returns decimal value of hexadecimal number */
+/* Returns decimal value of hexadecimal number from raw input */
 int hex_input(int *array, int size) {
     int result = 0;
     int factor = 1;
@@ -76,6 +76,79 @@ int hex_input(int *array, int size) {
     return result;
 }
 
+/* Returns decimal value of decimal number from raw input */
+int dec_input(int *array, int size) {
+    int result = 0;
+    int factor = 1;
+    // Go through backwards, skip first two indexes
+    for (int i = size - 1; i >= 0; i--) {
+        if (*(array + i) >= 48 && *(array + i) <= 57) {
+            // Was 0-9, add value times factor, then increase factor
+            result += (*(array + i) - 48) * factor;
+            factor *= 10;
+        }
+    }
+    return result;
+}
+
+/* Prints a number in the decimal number system */
+void print_dec(int number) {
+    printf("Dec: %d\n", number);
+}
+
+/* Prints a number in the binary number system */
+void print_bin(int number) {
+    printf("Bin: ");
+    int factor = 1073741824;
+    int started = 0;
+    while (1) {
+        if (number >= factor) {
+            number -= factor;
+            printf("1");
+            started = 1;
+        } else {
+            if (started) {
+                printf("0");
+            }
+        }
+        factor /= 2;
+        if (factor < 1) {
+            // Break when done printing
+            break;
+        }
+    }
+    printf("\n");
+}
+
+/* Prints a number in the hexadecimal number system */
+void print_hex(int number) {
+    printf("Hex: 0x");
+    int factor = 268435456;
+    int started = 0;
+    int counter = 0;
+    while (1) {
+        counter = 0;
+        while (number >= factor) {
+            number -= factor;
+            counter += 1;
+            started = 1;
+        }
+        if (started) {
+            if (counter > 9) {
+                printf("%c", counter + 55);
+            } else {
+                printf("%d", counter);
+            }
+        }
+        factor /= 16;
+        if (factor < 1) {
+            // Break when done printing
+            break;
+        }
+    }
+    printf("\n");
+}
+
 /* Main function */
 int main() {
     // Get valid input
@@ -86,14 +159,19 @@ int main() {
     // Check base and get decimal value
     int decimal = 0;
     if (input[0] == 'b' || input[0] == 'B') {
+        // Binary starts with b/B
         decimal = bin_input(input, size);
-        printf("binary: %d\n", decimal);
     } else if (input[0] == '0' && (input[1] == 'x' || input[1] == 'X')) {
+        // Hexadecimal starts with 0x/0X
         decimal = hex_input(input, size);
-        printf("hex: %d\n", decimal);
     } else {
-        printf("dec\n");
+        // Presume decimal number if none of the above
+        decimal = dec_input(input, size);
     }
+
+    print_dec(decimal);
+    print_bin(decimal);
+    print_hex(decimal);
     return 0;
 }
 
